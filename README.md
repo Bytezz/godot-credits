@@ -40,6 +40,7 @@ All the options available al pretty much clear on what each do.
 <video style="width:100%" autoplay loop controls>
 	<source src="screenshots/scrolling.mp4" type="video/mp4">
 </video>
+[scrolling.mp4](screenshots/scrolling.mp4)
 
 ![Options](screenshots/options.png  "Options")
 
