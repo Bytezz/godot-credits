@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://credits.gd" type="Script" id=1]
+[ext_resource path="res://exampleTitle.png" type="Texture" id=4]
+
+[node name="credits" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+creditsFile = "res://example-CREDITS"
+titleImage = ExtResource( 4 )
+
+[node name="background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="backgroundVideo" type="VideoPlayer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="musicPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="titleImg" type="TextureRect" parent="."]
+anchor_right = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="scrollingText" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="margin" type="MarginContainer" parent="scrollingText"]
+margin_right = 510.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Titles" type="Label" parent="scrollingText/margin"]
+margin_right = 510.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+align = 2
+
+[node name="margin2" type="MarginContainer" parent="scrollingText"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Names" type="Label" parent="scrollingText/margin2"]
+margin_right = 510.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[connection signal="finished" from="backgroundVideo" to="." method="_on_backgroundVideo_finished"]
+[connection signal="finished" from="musicPlayer" to="." method="_on_musicPlayer_finished"]
