@@ -64,8 +64,10 @@ export var skipControl = "ui_accept"
 
 ## The next scene to load once the scroll ended
 export(PackedScene) var nextScene
-## If true and there is not nextScene selected, once the scrol ended the program will quit
+## If true and there is no nextScene selected, once the scroll ended the program will quit
 export var quitOnEnd = false
+## If true and there is no nextScene selected and quitOnEnd is false, once the scroll ended the node will be destroyed
+export var destroyOnEnd = false
 
 func _ready():
 	viewSize = get_viewport().size
@@ -139,7 +141,7 @@ func _ready():
 					names.text+="\n"
 				line.erase(0,1)
 				line.erase(line.length()-1,1)
-				titles.text += line
+				titles.text += tr(line)
 			else:
 				names.text += line+"\n"
 				titles.text += "\n"
@@ -205,3 +207,5 @@ func end():
 		get_tree().change_scene(nextScene.get_path())
 	elif quitOnEnd:
 		get_tree().quit()
+	elif destroyOnEnd:
+		self.queue_free()
