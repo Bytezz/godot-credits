@@ -20,6 +20,7 @@ All the options available al pretty much clear on what each do.
 
 # Features
 
+- Centered titles and double panel titles
 - Signal on scroll end
 - Customizable speed
 - Set an image as title

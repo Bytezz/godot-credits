@@ -8,14 +8,12 @@ extends Control
 
 signal ended
 
+## Container of all scrolling nodes
+@onready var scrollingContainer = get_node("scrollingContainer")
 ## Container of titles and names
-@onready var scrollingText = get_node("scrollingText")
-## Titles (the text on left side)
-@onready var titles = get_node("scrollingText/margin/Titles")
-## Names (the text on right side)
-@onready var names = get_node("scrollingText/margin2/Names")
+@onready var scrollingTextScene = preload("res://credits-scene/scrollingText.tscn")
 ## An image to use as Title for the credits
-@onready var titleImg = get_node("titleImg")
+@onready var titleImg = get_node("scrollingContainer/titleImg")
 ## The credits file (formatted like a INI file (more info inside README.md))
 @export_file var creditsFile: String
 
@@ -25,6 +23,7 @@ var viewSize # The size of the window
 var regularSpeed # To keep track of the original speed
 var done = false # True if all the credits have been scrolled off the screen
 #				 # (don't change this value, to end just use "end" function)
+var is_first_frame = true
 
 var file
 var credits
@@ -71,15 +70,12 @@ var playlistIndex = 0
 
 func _ready():
 	viewSize = get_viewport().size
-	scrollingText.position.y = viewSize.y
+	scrollingContainer.position.y = viewSize.y*2 # it's multiplied by two as a workaround. Look at _process function
 	regularSpeed = speed
 	
 	# Set title image if there is one, otherwise delete the useless node
 	if titleImage != null:
 		titleImg.texture = titleImage
-		# Obviously, move the text under the title image
-		scrollingText.position.y += titleImage.get_size().y
-		titleImg.position.y = viewSize.y
 	else:
 		titleImg.queue_free()
 	
@@ -90,21 +86,7 @@ func _ready():
 	else:
 		$backgroundVideo.queue_free()
 	
-	# Set all the specified colors
 	$background.color = backgroundColor
-	titles.add_theme_color_override("font_color",titlesColor)
-	names.add_theme_color_override("font_color",namesColor)
-	
-	# Set the custom font (if there is one)
-	if customFont != null:
-		titles.add_theme_font_override("font", customFont)
-		names.add_theme_font_override("font", customFont)
-	
-	# Set the margin (the space between left and right panels)
-	@warning_ignore("integer_division")
-	scrollingText.get_node("margin").add_theme_constant_override("margin_right", margin/2)
-	@warning_ignore("integer_division")
-	scrollingText.get_node("margin2").add_theme_constant_override("margin_left", margin/2)
 	
 	# If the playlist has at list one track, play it
 	if musicPlaylist.size() > 0 and musicPlaylist[playlistIndex] != null:
@@ -125,37 +107,87 @@ func _ready():
 	file.close()
 	
 	# Parse the credits file
+	var scrollingText = null
+	var centeredText = null
+	var titles
+	var names
 	var lines = credits.split("\n")
 	var line
 	for i in lines.size():
-		line = lines[i].strip_edges()
-		if line == "":
-			titles.text += "\n"
-			names.text += "\n"
-			if i>0 and (lines[i-1].begins_with("[") and lines[i-1].ends_with("]")):
+		lines[i] = lines[i].strip_edges()
+		line = lines[i]
+		if line.begins_with("{") and line.ends_with("}"):
+			scrollingText = null
+			centeredText = Label.new()
+			
+			# Center text
+			centeredText.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			centeredText.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			
+			# Color and font
+			centeredText.add_theme_color_override("font_color",namesColor)
+			if customFont != null:
+				titles.add_theme_font_override("font", customFont)
+			
+			line = line.erase(0,1)
+			line = line.erase(line.length()-1,1)
+			centeredText.text += tr(line.strip_edges())
+			
+			scrollingContainer.add_child(centeredText)
+			centeredText = null
+		else:
+			if scrollingText == null:
+				scrollingText = scrollingTextScene.instantiate()
+				titles = scrollingText.get_node("margin/Titles")
+				names = scrollingText.get_node("margin2/Names")
+				
+				# Set colors
+				titles.add_theme_color_override("font_color",titlesColor)
+				names.add_theme_color_override("font_color",namesColor)
+				
+				# Set the custom font (if there is one)
+				if customFont != null:
+					titles.add_theme_font_override("font", customFont)
+					names.add_theme_font_override("font", customFont)
+				
+				# Set the margin (the space between left and right panels)
+				@warning_ignore("integer_division")
+				scrollingText.get_node("margin").add_theme_constant_override("margin_right", margin/2)
+				@warning_ignore("integer_division")
+				scrollingText.get_node("margin2").add_theme_constant_override("margin_left", margin/2)
+				
+				scrollingContainer.add_child(scrollingText)
+			
+			if line == "":
 				titles.text += "\n"
 				names.text += "\n"
-		else:
-			if line.begins_with("[") and line.ends_with("]"):
+				if i>0 and (lines[i-1].begins_with("[") and lines[i-1].ends_with("]")):
+					titles.text += "\n"
+					names.text += "\n"
+			elif line.begins_with("[") and line.ends_with("]"):
 				if i>0 and (lines[i-1].begins_with("[") and lines[i-1].ends_with("]")):
 					titles.text+="\n"
 					names.text+="\n"
-				line.erase(0,1)
-				line.erase(line.length()-1,1)
-				titles.text += tr(line)
+				line = line.erase(0,1)
+				line = line.erase(line.length()-1,1)
+				titles.text += tr(line.strip_edges())
 			else:
 				names.text += line+"\n"
 				titles.text += "\n"
 
 
 func _process(delta):
+	# For some reason the position of the container is shifted once displayed.
+	# This workaround fix it
+	if is_first_frame:
+		viewSize = get_viewport().size
+		scrollingContainer.position.y = viewSize.y
+		is_first_frame = false
+	
 	if not done:
 		# If the scroll is not yet ended, keep to scroll it
-		if scrollingText.position.y+scrollingText.size.y > 0:
-			scrollingText.position.y -= speed*delta
-			# If there is a title image, scroll it too
-			if titleImage != null:
-				titleImg.position.y -= speed*delta
+		if scrollingContainer.position.y+scrollingContainer.size.y > 0:
+			scrollingContainer.position.y -= speed*delta
 		else:
 			end()
 

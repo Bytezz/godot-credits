@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ct4dek63v5j5j"]
 
 [ext_resource type="Script" path="res://credits-scene/credits.gd" id="1_3jpn6"]
-[ext_resource type="Texture2D" uid="uid://tsln7dwid0dq" path="res://credits-scene/exampleTitle.png" id="2_jt3vv"]
+[ext_resource type="Texture2D" uid="uid://tsln7dwid0dq" path="res://credits-scene/exampleTitle.png" id="2_xutvm"]
 
 [node name="credits" type="Control"]
 layout_mode = 3
@@ -12,7 +12,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3jpn6")
 creditsFile = "res://credits-scene/example-CREDITS"
-titleImage = ExtResource("2_jt3vv")
+titleImage = ExtResource("2_xutvm")
+destroyOnEnd = true
 
 [node name="background" type="ColorRect" parent="."]
 layout_mode = 0
@@ -28,41 +29,19 @@ expand = true
 
 [node name="musicPlayer" type="AudioStreamPlayer" parent="."]
 
-[node name="titleImg" type="TextureRect" parent="."]
-layout_mode = 0
+[node name="scrollingContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="titleImg" type="TextureRect" parent="scrollingContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 stretch_mode = 5
-
-[node name="scrollingText" type="HBoxContainer" parent="."]
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 14.0
-size_flags_horizontal = 3
-size_flags_vertical = 0
-alignment = 1
-
-[node name="margin" type="MarginContainer" parent="scrollingText"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="Titles" type="Label" parent="scrollingText/margin"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-horizontal_alignment = 2
-
-[node name="margin2" type="MarginContainer" parent="scrollingText"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="Names" type="Label" parent="scrollingText/margin2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
 
 [connection signal="finished" from="backgroundVideo" to="." method="_on_backgroundVideo_finished"]
 [connection signal="finished" from="musicPlayer" to="." method="_on_musicPlayer_finished"]
