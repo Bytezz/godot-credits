@@ -102,9 +102,9 @@ func _ready():
 	
 	# Set the margin (the space between left and right panels)
 	@warning_ignore("integer_division")
-	$scrollingText/margin.add_theme_constant_override("offset_right", margin/2)
+	scrollingText.get_node("margin").add_theme_constant_override("margin_right", margin/2)
 	@warning_ignore("integer_division")
-	$scrollingText/margin2.add_theme_constant_override("offset_left", margin/2)
+	scrollingText.get_node("margin2").add_theme_constant_override("margin_left", margin/2)
 	
 	# If the playlist has at list one track, play it
 	if musicPlaylist.size() > 0 and musicPlaylist[playlistIndex] != null:
