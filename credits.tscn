@@ -1,77 +1,64 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://ct4dek63v5j5j"]
 
-[ext_resource path="res://credits.gd" type="Script" id=1]
-[ext_resource path="res://exampleTitle.png" type="Texture" id=4]
+[ext_resource type="Script" path="res://credits.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://tsln7dwid0dq" path="res://exampleTitle.png" id="4"]
 
 [node name="credits" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("1")
 creditsFile = "res://example-CREDITS"
-titleImage = ExtResource( 4 )
+titleImage = ExtResource("4")
 
 [node name="background" type="ColorRect" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+color = Color(0, 0, 0, 1)
 
-[node name="backgroundVideo" type="VideoPlayer" parent="."]
+[node name="backgroundVideo" type="VideoStreamPlayer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand = true
 
 [node name="musicPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="titleImg" type="TextureRect" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+stretch_mode = 5
 
 [node name="scrollingText" type="HBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 14.0
+offset_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="margin" type="MarginContainer" parent="scrollingText"]
-margin_right = 510.0
-margin_bottom = 14.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="Titles" type="Label" parent="scrollingText/margin"]
-margin_right = 510.0
-margin_bottom = 14.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-align = 2
+horizontal_alignment = 2
 
 [node name="margin2" type="MarginContainer" parent="scrollingText"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 14.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="Names" type="Label" parent="scrollingText/margin2"]
-margin_right = 510.0
-margin_bottom = 14.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
